@@ -34,6 +34,30 @@
             return score;
         }
 
+        public int[] ScoreByFrames()
+        {
+            int[] score = { 10 };
+            int frameIndex = 0;
+            for (int frame = 0; frame < 10; frame++)
+                if (IsStrike(frameIndex))
+                {
+                    score[frameIndex] = 10 + StrikeBonus(frameIndex);
+                    frameIndex++;
+                }
+                else if (IsSpare(frameIndex))
+                {
+                    score[frameIndex] = 10 + SpareBonus(frameIndex);
+                    frameIndex += 2;
+                }
+                else
+                {
+                    score[frameIndex] = SumOfBallsInFrame(frameIndex);
+                    frameIndex += 2;
+                }
+
+            return score;
+        }
+
         private bool IsStrike(int frameIndex)
         {
             return _rolls[frameIndex] == 10;
