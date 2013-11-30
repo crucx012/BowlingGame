@@ -1,4 +1,6 @@
-﻿namespace BowlingGame
+﻿using System.Collections.Generic;
+
+namespace BowlingGame
 {
     public class Game
     {
@@ -36,22 +38,31 @@
 
         public int[] ScoreByFrames()
         {
-            int[] score = { 10 };
+            var score = new int[10];
             int frameIndex = 0;
             for (int frame = 0; frame < 10; frame++)
                 if (IsStrike(frameIndex))
                 {
-                    score[frameIndex] = 10 + StrikeBonus(frameIndex);
+                    if (IsStrikeBonusRolled(frameIndex))
+                        score[frame] = 10 + StrikeBonus(frameIndex) + LatestScore(frame, score);
+                    else
+                        return score;
                     frameIndex++;
                 }
                 else if (IsSpare(frameIndex))
                 {
-                    score[frameIndex] = 10 + SpareBonus(frameIndex);
+                    if (IsSpareBonusRolled(frameIndex))
+                        score[frame] = 10 + SpareBonus(frameIndex) + LatestScore(frame, score);
+                    else
+                        return score;
                     frameIndex += 2;
                 }
                 else
                 {
-                    score[frameIndex] = SumOfBallsInFrame(frameIndex);
+                    if (IsBallRolled(frameIndex))
+                        score[frame] = SumOfBallsInFrame(frameIndex) + LatestScore(frame, score);
+                    else
+                        return score;
                     frameIndex += 2;
                 }
 
@@ -81,6 +92,26 @@
         private int SumOfBallsInFrame(int frameIndex)
         {
             return _rolls[frameIndex] + _rolls[frameIndex + 1];
+        }
+
+        private int LatestScore(int frame, IList<int> score)
+        {
+            return frame > 0 ? score[frame - 1] : 0;
+        }
+
+        private bool IsStrikeBonusRolled(int frameIndex)
+        {
+            return _currentRoll - (frameIndex + 2) > 0;
+        }
+
+        private bool IsSpareBonusRolled(int frameIndex)
+        {
+            return _currentRoll - (frameIndex + 2) > 0;
+        }
+
+        private bool IsBallRolled(int frameIndex)
+        {
+            return _currentRoll - frameIndex > 0;
         }
     }
 }
