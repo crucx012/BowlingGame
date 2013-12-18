@@ -43,7 +43,7 @@ namespace BowlingGame
             for (int frame = 0; frame < 10; frame++)
                 if (IsStrike(frameIndex))
                 {
-                    if (IsStrikeBonusRolled(frameIndex))
+                    if (IsBonusRolled(frameIndex))
                         score[frame] = 10 + StrikeBonus(frameIndex) + LatestScore(frame, score);
                     else
                         return score;
@@ -51,7 +51,7 @@ namespace BowlingGame
                 }
                 else if (IsSpare(frameIndex))
                 {
-                    if (IsSpareBonusRolled(frameIndex))
+                    if (IsBonusRolled(frameIndex))
                         score[frame] = 10 + SpareBonus(frameIndex) + LatestScore(frame, score);
                     else
                         return score;
@@ -99,12 +99,7 @@ namespace BowlingGame
             return frame > 0 ? score[frame - 1] : 0;
         }
 
-        private bool IsStrikeBonusRolled(int frameIndex)
-        {
-            return _currentRoll - (frameIndex + 2) > 0;
-        }
-
-        private bool IsSpareBonusRolled(int frameIndex)
+        private bool IsBonusRolled(int frameIndex)
         {
             return _currentRoll - (frameIndex + 2) > 0;
         }
